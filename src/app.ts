@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
 import path from 'path';
+import routes from './routes';
 
 dotenv.config();
 
@@ -19,6 +20,9 @@ app.use(express.urlencoded({ extended: true }));
 // For photo uploads
 const uploadPath = process.env.UPLOAD_PATH || 'uploads';
 app.use('/uploads', express.static(path.join(__dirname, '../', uploadPath)));
+
+// Register Routes
+app.use('/', routes);
 
 // Health Check Route
 app.get('/health', (_req: Request, res: Response) => {
