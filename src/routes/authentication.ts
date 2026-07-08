@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { AuthenticationController } from '../controllers/authenticationController';
+import { AuthenticationController } from '../controllers/AuthenticationController';
 import { validateBody } from '../middleware/validation.middleware';
 import { loginSchema } from '../validators/authenticationSchema';
 
