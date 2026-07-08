@@ -30,8 +30,15 @@ app.get('/health', (_req: Request, res: Response) => {
 });
 
 // Error handling middleware
-app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
+app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
   console.error(err.stack);
+
+  // Handle Multer upload errors
+  if (err.name === 'MulterError' || err.message === 'Only image files are allowed!') {
+    res.status(400).json({ error: 'Bad Request', message: err.message });
+    return;
+  }
+
   res.status(500).json({ error: 'Internal Server Error', message: err.message });
 });
 
