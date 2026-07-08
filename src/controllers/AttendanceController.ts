@@ -11,7 +11,9 @@ export class AttendanceController {
 
   public getAll = async (req: Request, res: Response): Promise<Response> => {
     try {
-      const employeeId = req.query.employee_id ? parseInt(String(req.query.employee_id), 10) : undefined;
+      const employeeId = req.query.employee_id
+        ? parseInt(String(req.query.employee_id), 10)
+        : undefined;
       const date = req.query.date ? String(req.query.date) : undefined;
       const from = req.query.from ? String(req.query.from) : undefined;
       const to = req.query.to ? String(req.query.to) : undefined;

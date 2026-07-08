@@ -13,7 +13,12 @@ export class ReportController {
     try {
       const { month, employee_id } = req.query;
       if (!month || typeof month !== 'string') {
-        return ApiResponser.error(res, 'Month query parameter is required in YYYY-MM format', [], 400);
+        return ApiResponser.error(
+          res,
+          'Month query parameter is required in YYYY-MM format',
+          [],
+          400,
+        );
       }
 
       const match = month.match(/^\d{4}-\d{2}$/);

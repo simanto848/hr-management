@@ -11,7 +11,10 @@ export class EmployeesController {
 
   private formatEmployeePhotoUrl(req: Request, employee: any): any {
     if (employee && employee.photo_path) {
-      if (!employee.photo_path.startsWith('http://') && !employee.photo_path.startsWith('https://')) {
+      if (
+        !employee.photo_path.startsWith('http://') &&
+        !employee.photo_path.startsWith('https://')
+      ) {
         const protocol = req.protocol;
         const host = req.get('host');
         employee.photo_path = `${protocol}://${host}/uploads/${employee.photo_path}`;
@@ -28,11 +31,16 @@ export class EmployeesController {
 
       const result = await this.employeesService.getAll(search, page, limit);
       const formattedData = result.data.map((emp) => this.formatEmployeePhotoUrl(req, { ...emp }));
-      
-      return ApiResponser.success(res, 'Employees listed successfully', {
-        ...result,
-        data: formattedData,
-      }, 200);
+
+      return ApiResponser.success(
+        res,
+        'Employees listed successfully',
+        {
+          ...result,
+          data: formattedData,
+        },
+        200,
+      );
     } catch (error: any) {
       return ApiResponser.error(res, error.message || 'Failed to list employees', [], 500);
     }

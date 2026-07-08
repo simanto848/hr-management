@@ -10,7 +10,10 @@ export class AttendanceService {
     to?: string,
     page: number = 1,
     limit: number = 10,
-  ): Promise<{ data: Attendance[]; pagination: { total: number; page: number; limit: number; totalPages: number } }> {
+  ): Promise<{
+    data: Attendance[];
+    pagination: { total: number; page: number; limit: number; totalPages: number };
+  }> {
     const query = db<Attendance>('attendance');
 
     if (employeeId) {
@@ -34,7 +37,12 @@ export class AttendanceService {
     const total = countResult ? parseInt(countResult.count, 10) : 0;
 
     const offset = (page - 1) * limit;
-    const data = await query.select('*').orderBy('date', 'desc').orderBy('check_in_time', 'asc').limit(limit).offset(offset);
+    const data = await query
+      .select('*')
+      .orderBy('date', 'desc')
+      .orderBy('check_in_time', 'asc')
+      .limit(limit)
+      .offset(offset);
 
     const totalPages = Math.ceil(total / limit);
 
@@ -56,7 +64,10 @@ export class AttendanceService {
   public async createOrUpdate(data: NewAttendance): Promise<Attendance> {
     const { employee_id, date, check_in_time } = data;
 
-    const employee = await db<Employee>('employees').where({ id: employee_id }).whereNull('deleted_at').first();
+    const employee = await db<Employee>('employees')
+      .where({ id: employee_id })
+      .whereNull('deleted_at')
+      .first();
     if (!employee) {
       throw new Error('Active employee not found with the provided ID');
     }
