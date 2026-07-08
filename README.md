@@ -42,6 +42,13 @@ npm run knex seed:run
   npm start
   ```
 
+## API Documentation
+
+Once the application is running, you can test and view the interactive API documentation at:
+- `http://localhost:3000/api-docs`
+
+Use the **Authorize** button on the top right to authenticate using the JWT token returned from the login endpoint.
+
 ## Code Quality
 
 - Format the code:

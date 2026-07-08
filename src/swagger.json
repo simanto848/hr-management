@@ -1,0 +1,252 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "HR Management Backend API",
+    "version": "1.0.0",
+    "description": "API Documentation for HR Management system."
+  },
+  "servers": [
+    {
+      "url": "/",
+      "description": "Root Prefix"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "tags": [
+    { "name": "Authentication", "description": "HR User Auth" },
+    { "name": "Employees", "description": "Employee Management" },
+    { "name": "Attendance", "description": "Daily Attendance Logs" },
+    { "name": "Reports", "description": "HR Reports" }
+  ],
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "HR User Login",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": { "type": "string", "example": "hr@gmail.com" },
+                  "password": { "type": "string", "example": "12345678" }
+                },
+                "required": ["email", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Login successful" }
+        }
+      }
+    },
+    "/employees": {
+      "get": {
+        "tags": ["Employees"],
+        "summary": "List all employees",
+        "parameters": [
+          { "name": "search", "in": "query", "schema": { "type": "string" }, "required": false, "description": "Search by name (partial)" },
+          { "name": "page", "in": "query", "schema": { "type": "integer" }, "required": false },
+          { "name": "limit", "in": "query", "schema": { "type": "integer" }, "required": false }
+        ],
+        "responses": {
+          "200": { "description": "Success" }
+        }
+      },
+      "post": {
+        "tags": ["Employees"],
+        "summary": "Create employee",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "age": { "type": "integer" },
+                  "designation": { "type": "string" },
+                  "hiring_date": { "type": "string", "format": "date" },
+                  "date_of_birth": { "type": "string", "format": "date" },
+                  "salary": { "type": "number" },
+                  "photo_path": { "type": "string", "format": "binary" }
+                },
+                "required": ["name", "age", "designation", "hiring_date", "date_of_birth", "salary"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Created" }
+        }
+      }
+    },
+    "/employees/{id}": {
+      "get": {
+        "tags": ["Employees"],
+        "summary": "Get employee by ID",
+        "parameters": [
+          { "name": "id", "in": "path", "schema": { "type": "integer" }, "required": true }
+        ],
+        "responses": {
+          "200": { "description": "Success" }
+        }
+      },
+      "put": {
+        "tags": ["Employees"],
+        "summary": "Update employee",
+        "parameters": [
+          { "name": "id", "in": "path", "schema": { "type": "integer" }, "required": true }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "age": { "type": "integer" },
+                  "designation": { "type": "string" },
+                  "hiring_date": { "type": "string", "format": "date" },
+                  "date_of_birth": { "type": "string", "format": "date" },
+                  "salary": { "type": "number" },
+                  "photo_path": { "type": "string", "format": "binary" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Updated" }
+        }
+      },
+      "delete": {
+        "tags": ["Employees"],
+        "summary": "Delete employee",
+        "parameters": [
+          { "name": "id", "in": "path", "schema": { "type": "integer" }, "required": true }
+        ],
+        "responses": {
+          "200": { "description": "Deleted" }
+        }
+      }
+    },
+    "/attendance": {
+      "get": {
+        "tags": ["Attendance"],
+        "summary": "List attendance logs",
+        "parameters": [
+          { "name": "employee_id", "in": "query", "schema": { "type": "integer" }, "required": false },
+          { "name": "date", "in": "query", "schema": { "type": "string", "format": "date" }, "required": false },
+          { "name": "from", "in": "query", "schema": { "type": "string", "format": "date" }, "required": false },
+          { "name": "to", "in": "query", "schema": { "type": "string", "format": "date" }, "required": false },
+          { "name": "page", "in": "query", "schema": { "type": "integer" }, "required": false },
+          { "name": "limit", "in": "query", "schema": { "type": "integer" }, "required": false }
+        ],
+        "responses": {
+          "200": { "description": "Success" }
+        }
+      },
+      "post": {
+        "tags": ["Attendance"],
+        "summary": "Create or update attendance",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "employee_id": { "type": "integer" },
+                  "date": { "type": "string", "format": "date" },
+                  "check_in_time": { "type": "string", "example": "09:30:00" }
+                },
+                "required": ["employee_id", "date", "check_in_time"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Recorded" }
+        }
+      }
+    },
+    "/attendance/{id}": {
+      "get": {
+        "tags": ["Attendance"],
+        "summary": "Get attendance entry by ID",
+        "parameters": [
+          { "name": "id", "in": "path", "schema": { "type": "integer" }, "required": true }
+        ],
+        "responses": {
+          "200": { "description": "Success" }
+        }
+      },
+      "put": {
+        "tags": ["Attendance"],
+        "summary": "Update attendance check-in time",
+        "parameters": [
+          { "name": "id", "in": "path", "schema": { "type": "integer" }, "required": true }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "check_in_time": { "type": "string", "example": "09:30:00" }
+                },
+                "required": ["check_in_time"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Updated" }
+        }
+      },
+      "delete": {
+        "tags": ["Attendance"],
+        "summary": "Delete attendance",
+        "parameters": [
+          { "name": "id", "in": "path", "schema": { "type": "integer" }, "required": true }
+        ],
+        "responses": {
+          "200": { "description": "Deleted" }
+        }
+      }
+    },
+    "/reports/attendance": {
+      "get": {
+        "tags": ["Reports"],
+        "summary": "Monthly attendance summary report",
+        "parameters": [
+          { "name": "month", "in": "query", "schema": { "type": "string", "example": "2025-08" }, "required": true, "description": "Month in YYYY-MM format" },
+          { "name": "employee_id", "in": "query", "schema": { "type": "integer" }, "required": false }
+        ],
+        "responses": {
+          "200": { "description": "Success" }
+        }
+      }
+    }
+  }
+}
